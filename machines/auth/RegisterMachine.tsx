@@ -3,18 +3,20 @@ import { assign, fromPromise, setup } from "xstate";
 
 interface RegistrationContext {
     email: string;
-    username: string;
+    name: string;
     password: string;
     confirmPassword: string;
+    role: string;
     error: string | null;
     successMessage: string | null;
 }
 
 const initialContext: RegistrationContext = {
     email: '',
-    username: '',
+    name: '',
     password: '',
     confirmPassword: '',
+    role: 'Admin',
     error: null,
     successMessage: null,
 }
@@ -28,8 +30,8 @@ const registerMachine = setup({
             | { type: 'RESET' },
     },
     actors: {
-        registerWithEmailAndPassword: fromPromise(async ({ input }: { input: { email: string; username: string; password: string; confirmPassword: string } }) => {
-            const response = await registerWithEmailAndPassword(input.email, input.username, input.password, input.confirmPassword);
+        registerWithEmailAndPassword: fromPromise(async ({ input }: { input: { email: string; name: string; password: string; confirmPassword: string; role: string } }) => {
+            const response = await registerWithEmailAndPassword(input.email, input.name, input.password, input.confirmPassword, input.role);
             return response;
         }),
     },
@@ -74,9 +76,10 @@ const registerMachine = setup({
                 src: 'registerWithEmailAndPassword',
                 input: ({ context }: { context: RegistrationContext }) => ({
                     email: context.email,
-                    username: context.username,
+                    name: context.name,
                     password: context.password,
                     confirmPassword: context.confirmPassword,
+                    role: context.role,
                 }),
                 onDone: {
                     target: 'success',

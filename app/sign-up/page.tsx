@@ -12,7 +12,7 @@ export default function RegisterPage() {
     send({ type: 'SUBMIT' });
   };
 
-  const handleChange = (field: 'email' | 'username' | 'password' | 'confirmPassword', value: string) => {
+  const handleChange = (field: 'email' | 'name' | 'password' | 'confirmPassword', value: string) => {
     send({ type: 'CHANGE_FIELD', field, value });
   };
 
@@ -48,14 +48,14 @@ export default function RegisterPage() {
           </div>
 
           <div>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="name">Name</label>
             <input
-              id="username"
+              id="name"
               type="text"
-              value={state.context.username}
-              onChange={(e) => handleChange('username', e.target.value)}
+              value={state.context.name}
+              onChange={(e) => handleChange('name', e.target.value)}
               disabled={isSubmitting || isSuccess}
-              placeholder="Enter your username"
+              placeholder="Enter your name"
             />
           </div>
 
