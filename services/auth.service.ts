@@ -17,14 +17,7 @@ export const registerWithEmailAndPassword = async (
       name, 
       password,
       role,
-      tenantId: "691583f97f7968a408f2ec05",
     });
-    
-    // Log response data
-    if (response.data) {
-      console.log('API Response - success:', response.data.success);
-      console.log('API Response - data:', response.data.data);
-    }
     
     return response.data;
   } catch (error: unknown) {
@@ -43,12 +36,6 @@ export const registerWithEmailAndPassword = async (
       
       const status = axiosError.response?.status;
       const responseData = axiosError.response?.data;
-      
-      // Log error response data if available
-      if (responseData) {
-        console.log('API Error Response - success:', responseData.success);
-        console.log('API Error Response - data:', responseData.data);
-      }
       
       // Handle specific status codes
       if (status === 400) {

@@ -1,11 +1,18 @@
 'use client';
 import Link from 'next/link';
 import { useMachine } from '@xstate/react';
+import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 // import SSOButtons from '@/components/SSOButtons';
 import registerMachine from '@/machines/auth/RegisterMachine';
+import { useAppDispatch } from '@/store/hooks';
+import { setAuthData } from '@/store/features/AuthReducer';
 
 export default function RegisterPage() {
   const [state, send] = useMachine(registerMachine);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const hasStoredAuth = useRef(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,6 +25,41 @@ export default function RegisterPage() {
 
   const isSubmitting = state.matches('submitting');
   const isSuccess = state.matches('success');
+
+  // Store user data in Redux when registration succeeds
+  useEffect(() => {
+    if (isSuccess && state.context.registrationResponse && !hasStoredAuth.current) {
+      const response = state.context.registrationResponse;
+      
+      // Validate response structure and ensure success
+      if (
+        response.success === true &&
+        response.data &&
+        response.data.user &&
+        response.data.accessToken &&
+        response.data.refreshToken &&
+        response.data.user.id &&
+        response.data.user.email
+      ) {
+        // Store user data in Redux store and mark as authenticated
+        dispatch(setAuthData({
+          user: response.data.user,
+          accessToken: response.data.accessToken,
+          refreshToken: response.data.refreshToken,
+        }));
+        
+        hasStoredAuth.current = true;
+        
+        // Redirect to dashboard after successful registration and login
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 2000);
+      } else {
+        // Log error if response structure is invalid
+        console.error('Invalid registration response structure:', response);
+      }
+    }
+  }, [isSuccess, state.context.registrationResponse, dispatch, router]);
 
   return (
     <div className="flex flex-col items-center h-screen py-8 px-4 sm:px-0 sm:py-20">

@@ -1,6 +1,27 @@
 import { registerWithEmailAndPassword } from "@/services/auth.service";
 import { assign, fromPromise, setup } from "xstate";
 
+interface RegistrationResponse {
+    success: boolean;
+    data: {
+        accessToken: string;
+        refreshToken: string;
+        user: {
+            id: string;
+            email: string;
+            name: string;
+            role: string;
+            tenantId: string;
+            isEmailVerified: boolean;
+            status: string;
+            createdAt: string;
+            updatedAt: string;
+            [key: string]: unknown;
+        };
+        expiresIn: number;
+    };
+}
+
 interface RegistrationContext {
     email: string;
     name: string;
@@ -9,6 +30,7 @@ interface RegistrationContext {
     role: string;
     error: string | null;
     successMessage: string | null;
+    registrationResponse: RegistrationResponse | null;
 }
 
 const initialContext: RegistrationContext = {
@@ -19,6 +41,7 @@ const initialContext: RegistrationContext = {
     role: 'Admin',
     error: null,
     successMessage: null,
+    registrationResponse: null,
 }
 
 const registerMachine = setup({
@@ -52,8 +75,12 @@ const registerMachine = setup({
         clearForm: assign(() => initialContext),
         clearError: assign(({ context }) => ({ ...context, error: null })),
         storeSuccessMessage: assign(({ context, event }) => {
-            const output = (event as unknown as { output: { success?: boolean; data?: string; } }).output;
-            return { ...context, successMessage: output?.data || 'Registration successful!' };
+            const output = (event as unknown as { output: RegistrationResponse }).output;
+            return { 
+                ...context, 
+                successMessage: output?.data?.user?.name ? `Welcome, ${output.data.user.name}! Registration successful!` : 'Registration successful!',
+                registrationResponse: output || null,
+            };
         }),
     },
 }).createMachine({
