@@ -52,8 +52,8 @@ const registerMachine = setup({
         clearForm: assign(() => initialContext),
         clearError: assign(({ context }) => ({ ...context, error: null })),
         storeSuccessMessage: assign(({ context, event }) => {
-            const output = (event as unknown as { output: { message?: string } }).output;
-            return { ...context, successMessage: output?.message || 'Registration successful!' };
+            const output = (event as unknown as { output: { success?: boolean; data?: string; } }).output;
+            return { ...context, successMessage: output?.data || 'Registration successful!' };
         }),
     },
 }).createMachine({
