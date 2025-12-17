@@ -2,7 +2,7 @@ import { registerWithEmailAndPassword } from "@/services/auth.service";
 import { assign, fromPromise, setup } from "xstate";
 import { User } from "@/types";
 
-interface RegistrationResponse {
+export interface RegistrationResponse {
     success: boolean;
     data: {
         accessToken: string;
