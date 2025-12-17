@@ -32,6 +32,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
               </div>
             )}
             <button
+              type="button"
               onClick={handleLogout}
               className="bg-secondary text-primary px-4 py-2 text-sm font-semibold rounded-md transition-colors hover:opacity-90"
             >

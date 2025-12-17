@@ -9,11 +9,12 @@ import { useAppDispatch } from '@/store/hooks';
 import { setAuthData } from '@/store/features/AuthReducer';
 
 export default function RegisterPage() {
-  const [state, send] = useMachine(registerMachine);
-  const dispatch = useAppDispatch();
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [state, send] = useMachine(registerMachine);
+  
   const hasStoredAuth = useRef(false);
-
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     send({ type: 'SUBMIT' });
@@ -47,7 +48,7 @@ export default function RegisterPage() {
           accessToken: response.data.accessToken,
           refreshToken: response.data.refreshToken,
         }));
-        
+       
         hasStoredAuth.current = true;
         
         // Redirect to dashboard after successful registration and login

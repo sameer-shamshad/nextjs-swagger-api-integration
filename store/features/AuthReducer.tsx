@@ -52,6 +52,18 @@ const loadUserFromStorage = (): User | null => {
 };
 
 const getInitialContext = (): AuthState => {
+  // Check if localStorage is available (client-side only)
+  if (typeof window === 'undefined') {
+    return {
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      error: null,
+      isLoading: false,
+      isAuthenticated: false,
+    };
+  }
+
   // Load user from localStorage on initialization
   const user = loadUserFromStorage();
   const accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);

@@ -1,23 +1,13 @@
 import { registerWithEmailAndPassword } from "@/services/auth.service";
 import { assign, fromPromise, setup } from "xstate";
+import { User } from "@/types";
 
 interface RegistrationResponse {
     success: boolean;
     data: {
         accessToken: string;
         refreshToken: string;
-        user: {
-            id: string;
-            email: string;
-            name: string;
-            role: string;
-            tenantId: string;
-            isEmailVerified: boolean;
-            status: string;
-            createdAt: string;
-            updatedAt: string;
-            [key: string]: unknown;
-        };
+        user: User;
         expiresIn: number;
     };
 }

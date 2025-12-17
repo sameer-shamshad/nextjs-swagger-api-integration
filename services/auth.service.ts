@@ -18,7 +18,7 @@ export const registerWithEmailAndPassword = async (
       password,
       role,
     });
-    
+
     return response.data;
   } catch (error: unknown) {
     // Extract error message from axios error response
